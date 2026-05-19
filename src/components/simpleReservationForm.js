@@ -147,8 +147,17 @@ const SimpleReservationForm = () => {
 
       console.log("Sending reservation data:", reservationData); // Debug log
 
+      // --- CORRECTED API CALL ---
+      // Read the backend API URL from the environment variable
+      const BACKEND_API_BASE_URL = process.env.REACT_APP_API_URL || process.env.NEXT_PUBLIC_API_URL;
+
+      // Construct the full API endpoint URL
+      const apiEndpoint = `${BACKEND_API_BASE_URL}/reservations`;
+
+      console.log("Making request to:", apiEndpoint); // Debug log to confirm URL
+
       // API call to backend
-      const response = await fetch("https://restaurant-backend-1mt4.onrender.com", {
+      const response = await fetch(apiEndpoint, { // Use the dynamically constructed URL
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -172,14 +181,14 @@ const SimpleReservationForm = () => {
           occasion: 'regular',
           special_requests: '',
           table_preference: '',
-          location: 'California' // Reset to default
+          location: 'Downtown Dubai' // Reset to default - Matched initial state
         });
       } else {
         setSubmitMessage(`Reservation failed: ${result.error}`);
       }
     } catch (error) {
-      setSubmitMessage('Reservation failed. Please make sure the backend server is running.');
-      console.error("Reservation submission error:", error); // Debug log
+      setSubmitMessage('Reservation failed. Please make sure the backend server is running.'); // Generic message for user
+      console.error("Reservation submission error:", error); // Detailed error for developers
     } finally {
       setIsSubmitting(false);
     }
